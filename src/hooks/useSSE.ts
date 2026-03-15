@@ -19,6 +19,7 @@ export function useSSE() {
     updateTask,
     addTask,
     removeTask,
+    addEvent,
     setIsOnline,
     selectedTask,
     setSelectedTask,
@@ -153,5 +154,5 @@ export function useSSE() {
     };
   // selectedTask removed from deps to prevent re-connection loop
   // We use selectedTaskIdRef to check the current selected task ID without triggering re-renders
-  }, [addTask, removeTask, updateTask, setIsOnline, setSelectedTask]);
+  }, [addEvent, addTask, removeTask, updateTask, setIsOnline, setSelectedTask]);
 }
