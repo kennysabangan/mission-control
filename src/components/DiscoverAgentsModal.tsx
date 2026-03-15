@@ -128,10 +128,10 @@ export function DiscoverAgentsModal({ onClose, workspaceId }: DiscoverAgentsModa
           <div>
             <h2 className="text-lg font-semibold flex items-center gap-2">
               <Search className="w-5 h-5 text-mc-accent" />
-              Discover Gateway Agents
+              Import OpenClaw Agents
             </h2>
             <p className="text-sm text-mc-text-secondary mt-1">
-              Import existing agents from the OpenClaw Gateway
+              Import existing OpenClaw agents. Main/dev/social/markets will be auto-grouped into the right dashboard lanes.
             </p>
           </div>
           <button

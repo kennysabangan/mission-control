@@ -139,6 +139,9 @@ export function AgentsSidebar({ workspaceId, mobileMode = false, isPortrait = tr
 
         {!effectiveMinimized && (
           <>
+            <div className="mt-3 px-3 py-2 bg-mc-bg-tertiary border border-mc-border rounded-lg text-xs text-mc-text-secondary">
+              Dashboard view only — real OpenClaw filesystem workspaces remain separate underneath.
+            </div>
             {activeSubAgents > 0 && (
               <div className="mb-3 mt-3 px-3 py-2 bg-green-500/10 border border-green-500/20 rounded-lg">
                 <div className="flex items-center gap-2 text-sm">
@@ -215,13 +218,18 @@ export function AgentsSidebar({ workspaceId, mobileMode = false, isPortrait = tr
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-sm truncate">{agent.name}</span>
-                    {!!agent.is_master && <span className="text-xs text-mc-accent-yellow">★</span>}
+                    {!!agent.is_master && <span className="text-[10px] px-1 py-0 bg-yellow-500/20 text-yellow-300 rounded">Front Door</span>}
                   </div>
-                  <div className="text-xs text-mc-text-secondary truncate flex items-center gap-1">
+                  <div className="text-xs text-mc-text-secondary truncate flex items-center gap-1 flex-wrap">
                     {agent.role}
                     {agent.source === 'gateway' && (
-                      <span className="text-[10px] px-1 py-0 bg-blue-500/20 text-blue-400 rounded" title="Imported from Gateway">
-                        GW
+                      <span className="text-[10px] px-1 py-0 bg-blue-500/20 text-blue-400 rounded" title="Imported from OpenClaw Gateway">
+                        OpenClaw
+                      </span>
+                    )}
+                    {!agent.is_master && agent.source === 'gateway' && (
+                      <span className="text-[10px] px-1 py-0 bg-mc-bg rounded border border-mc-border" title="Specialist lane">
+                        Specialist
                       </span>
                     )}
                   </div>

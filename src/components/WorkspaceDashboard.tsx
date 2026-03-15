@@ -46,8 +46,8 @@ export function WorkspaceDashboard() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-3">
-              <span className="text-2xl">🦞</span>
-              <h1 className="text-xl font-bold">Mission Control</h1>
+              <span className="text-2xl">🤖</span>
+              <h1 className="text-xl font-bold">Jarvis Mission Control</h1>
             </div>
             <div className="flex items-center gap-2">
               <Link
@@ -72,9 +72,9 @@ export function WorkspaceDashboard() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
         <div className="mb-8">
-          <h2 className="text-2xl font-bold mb-2">All Workspaces</h2>
+          <h2 className="text-2xl font-bold mb-2">Agent Groups</h2>
           <p className="text-mc-text-secondary">
-            Select a workspace to view its mission queue and agents
+            These are dashboard buckets for how Jarvis organizes work. They are not the same thing as each OpenClaw agent&apos;s real filesystem workspace.
           </p>
         </div>
 
@@ -184,6 +184,15 @@ function WorkspaceCard({ workspace, onDelete }: { workspace: WorkspaceStats; onD
             )}
             <ArrowRight className="w-5 h-5 text-mc-text-secondary group-hover:text-mc-accent transition-colors" />
           </div>
+        </div>
+
+        <div className="text-sm text-mc-text-secondary min-h-[40px] line-clamp-2">
+          {workspace.id === 'main-hub' && 'Jarvis front door and coordinator.'}
+          {workspace.id === 'dev-lab' && 'Engineering specialist lane.'}
+          {workspace.id === 'social-studio' && 'Content and social media specialist lane.'}
+          {workspace.id === 'markets-lab' && 'Prediction markets research specialist lane.'}
+          {workspace.id === 'default' && 'Legacy/shared dashboard bucket.'}
+          {!['main-hub','dev-lab','social-studio','markets-lab','default'].includes(workspace.id) && 'Custom dashboard group.'}
         </div>
 
         {/* Simple task/agent counts */}

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { v4 as uuidv4 } from 'uuid';
 import { queryOne, queryAll, run, transaction } from '@/lib/db';
 import type { Agent } from '@/lib/types';
+import { classifyGatewayAgent, ensureDashboardWorkspaces } from '@/lib/agent-workspaces';
 
 export const dynamic = 'force-dynamic';
 interface ImportAgentRequest {
@@ -49,6 +50,7 @@ export async function POST(request: NextRequest) {
     };
 
     transaction(() => {
+      ensureDashboardWorkspaces();
       const now = new Date().toISOString();
 
       for (const agentReq of body.agents) {
@@ -62,7 +64,8 @@ export async function POST(request: NextRequest) {
         }
 
         const id = uuidv4();
-        const workspaceId = agentReq.workspace_id || 'default';
+        const mapped = classifyGatewayAgent(agentReq.name || agentReq.gateway_agent_id);
+        const workspaceId = agentReq.workspace_id || mapped.workspaceId;
 
         // Generate default identity files referencing the gateway agent.
         // The gateway does not expose SOUL.md/USER.md/AGENTS.md via its API,
@@ -101,10 +104,10 @@ export async function POST(request: NextRequest) {
           [
             id,
             agentReq.name,
-            'Imported Agent',
-            `Imported from OpenClaw Gateway (${agentReq.gateway_agent_id})`,
-            '🔗',
-            0,
+            mapped.role,
+            mapped.description,
+            mapped.avatar,
+            mapped.isMaster,
             workspaceId,
             soulMd,
             userMd,

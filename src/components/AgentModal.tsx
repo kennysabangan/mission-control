@@ -240,7 +240,7 @@ export function AgentModal({ agent, onClose, workspaceId, onAgentCreated }: Agen
                   className="w-4 h-4"
                 />
                 <label htmlFor="is_master" className="text-sm">
-                  Master Orchestrator (can coordinate other agents)
+                  Front Door / Primary Coordinator
                 </label>
               </div>
 

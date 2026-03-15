@@ -22,7 +22,10 @@ export async function GET(request: NextRequest) {
     
     if (includeStats) {
       // Get workspaces with task counts and agent counts
-      const workspaces = db.prepare('SELECT * FROM workspaces ORDER BY name').all() as Workspace[];
+      const workspaces = db.prepare(`
+        SELECT * FROM workspaces
+        ORDER BY CASE id WHEN 'main-hub' THEN 0 WHEN 'dev-lab' THEN 1 WHEN 'social-studio' THEN 2 WHEN 'markets-lab' THEN 3 WHEN 'default' THEN 99 ELSE 10 END, name
+      `).all() as Workspace[];
       
       const stats: WorkspaceStats[] = workspaces.map(workspace => {
         // Get task counts by status

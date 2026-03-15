@@ -102,7 +102,7 @@ export function Header({ workspace, isPortrait = true }: HeaderProps) {
           <div className="flex items-center gap-2 md:gap-4 min-w-0">
             <div className="hidden sm:flex items-center gap-2">
               <Zap className="w-5 h-5 text-mc-accent-cyan" />
-              <span className="font-semibold text-mc-text uppercase tracking-wider text-sm">Mission Control</span>
+              <span className="font-semibold text-mc-text uppercase tracking-wider text-sm">Jarvis Mission Control</span>
             </div>
 
             {workspace ? (
