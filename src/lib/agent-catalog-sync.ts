@@ -65,15 +65,20 @@ export async function syncGatewayAgentsToCatalog(options?: { force?: boolean; re
         changed += 1;
       }
 
-      run(
-        `INSERT INTO events (id, type, message, metadata, created_at)
-         VALUES (lower(hex(randomblob(16))), 'system', ?, ?, ?)`,
-        [
-          `Agent catalog sync completed (${options?.reason || 'automatic'})`,
-          JSON.stringify({ changed, reason: options?.reason || 'automatic' }),
-          ts,
-        ]
-      );
+      const reason = options?.reason || 'automatic';
+      const shouldLogSyncEvent = reason !== 'scheduled' && changed > 0;
+
+      if (shouldLogSyncEvent) {
+        run(
+          `INSERT INTO events (id, type, message, metadata, created_at)
+           VALUES (lower(hex(randomblob(16))), 'system', ?, ?, ?)`,
+          [
+            `Agent catalog sync completed (${reason})`,
+            JSON.stringify({ changed, reason }),
+            ts,
+          ]
+        );
+      }
     });
 
     lastSyncAt = Date.now();
