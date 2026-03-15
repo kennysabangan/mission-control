@@ -69,11 +69,27 @@ export async function GET(request: NextRequest) {
         };
       });
       
-      return NextResponse.json(stats);
+      const filteredStats = stats.filter((workspace) => {
+        if (workspace.id !== 'default') return true;
+        return workspace.agentCount > 0 || workspace.taskCounts.total > 0;
+      });
+
+      return NextResponse.json(filteredStats);
     }
     
-    const workspaces = db.prepare('SELECT * FROM workspaces ORDER BY name').all();
-    return NextResponse.json(workspaces);
+    const workspaces = db.prepare(`
+      SELECT * FROM workspaces
+      ORDER BY CASE id WHEN 'main-hub' THEN 0 WHEN 'dev-lab' THEN 1 WHEN 'social-studio' THEN 2 WHEN 'markets-lab' THEN 3 WHEN 'default' THEN 99 ELSE 10 END, name
+    `).all() as Workspace[];
+
+    const filteredWorkspaces = workspaces.filter((workspace) => {
+      if (workspace.id !== 'default') return true;
+      const taskCount = db.prepare('SELECT COUNT(*) as count FROM tasks WHERE workspace_id = ?').get(workspace.id) as { count: number };
+      const agentCount = db.prepare('SELECT COUNT(*) as count FROM agents WHERE workspace_id = ?').get(workspace.id) as { count: number };
+      return taskCount.count > 0 || agentCount.count > 0;
+    });
+
+    return NextResponse.json(filteredWorkspaces);
   } catch (error) {
     console.error('Failed to fetch workspaces:', error);
     return NextResponse.json({ error: 'Failed to fetch workspaces' }, { status: 500 });
